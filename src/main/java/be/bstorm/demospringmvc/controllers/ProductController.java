@@ -1,7 +1,11 @@
 package be.bstorm.demospringmvc.controllers;
 
-import be.bstorm.demospringmvc.datas.FakeDb;
 import be.bstorm.demospringmvc.entities.Product;
+import be.bstorm.demospringmvc.services.ProductService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,16 +14,25 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/product")
+@RequiredArgsConstructor
 public class ProductController {
 
-    private final FakeDb fakeDb = new FakeDb();
+    private final ProductService productService;
 
     @GetMapping
     public String getProducts(
+            @RequestParam(required = false,defaultValue = "0") int page,
+            @RequestParam(required = false,defaultValue = "5") int size,
             Model model
     ) {
-        List<Product> products = fakeDb.products;
-        model.addAttribute("products", products);
+        Page<Product> products = productService.findAll(PageRequest.of(page,size, Sort.by(Sort.Direction.ASC,"id")));
+        int pageNumber = products.getPageable().getPageNumber();
+        int pageSize = products.getPageable().getPageSize();
+        int totalPages = products.getTotalPages();
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("totalPages", totalPages);
         return "pages/product/index.html";
     }
 
@@ -29,10 +42,7 @@ public class ProductController {
             Model model
     ) {
 
-        Product product = fakeDb.products.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
+        Product product = productService.findById(id);
         model.addAttribute("product", product);
         return "pages/product/details.html";
     }
@@ -49,7 +59,7 @@ public class ProductController {
     public String createProduct(
             @ModelAttribute Product product
     ) {
-        fakeDb.products.add(product);
+        productService.save(product);
         return "redirect:/product";
     }
 
@@ -58,10 +68,7 @@ public class ProductController {
             @PathVariable Long id,
             Model model
     ){
-        Product product = fakeDb.products.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
+        Product product = productService.findById(id);
 
         model.addAttribute("product", product);
         return "pages/product/update.html";
@@ -73,14 +80,7 @@ public class ProductController {
             @ModelAttribute Product product
     ){
 
-        Product existingProduct = fakeDb.products.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
-
-        existingProduct.setDesignation(product.getDesignation());
-        existingProduct.setDescription(product.getDescription());
-        existingProduct.setPrice(product.getPrice());
+        productService.update(id,product);
 
         return "redirect:/product";
     }
@@ -89,7 +89,7 @@ public class ProductController {
     public String deleteProduct(
             @PathVariable Long id
     ) {
-        fakeDb.products.removeIf(p -> p.getId().equals(id));
+        productService.deleteById(id);
         return "redirect:/product";
     }
 }

@@ -6,15 +6,25 @@
 </head>
 <body>
 <a th:href="@{/product/create}">Create new</a>
-    <ul>
-        <li th:each="product : ${products}">
-            <p th:text="${product.designation}"></p>
-            <a th:href="@{/product/{id} (id=${product.id})}">Details</a>
-            <a th:href="@{/product/update/{id} (id=${product.id})}">Update</a>
-            <form th:action="@{/product/delete/{id} (id=${product.id})}" method="post">
-                <button type="submit">Delete</button>
-            </form>
-        </li>
-    </ul>
+<ul>
+    <li th:each="product : ${products}">
+        <p th:text="${product.designation}"></p>
+        <a th:href="@{/product/{id} (id=${product.id})}">Details</a>
+        <a th:href="@{/product/update/{id} (id=${product.id})}">Update</a>
+        <form th:action="@{/product/delete/{id} (id=${product.id})}" method="post">
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+<a
+        th:if="${pageNumber > 0}"
+        th:href="@{/product(page=${pageNumber - 1})}">
+    Previous
+</a>
+<a
+        th:if="${pageNumber + 1 < totalPages}"
+        th:href="@{/product(page=${pageNumber + 1})}">
+    Next
+</a>
 </body>
 </html>

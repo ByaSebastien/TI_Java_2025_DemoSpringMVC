@@ -8,10 +8,6 @@
 <a th:href="@{/product}">Back to list</a>
 <form th:action="@{/product/create}" method="post" th:object="${product}">
     <div>
-        <label for="id">Id : </label>
-        <input type="number" required id="id" th:field="*{id}">
-    </div>
-    <div>
         <label for="designation">Designation : </label>
         <input type="text" required id="designation" th:field="*{designation}">
     </div>

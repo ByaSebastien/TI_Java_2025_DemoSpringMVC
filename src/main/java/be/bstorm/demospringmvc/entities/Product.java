@@ -2,6 +2,7 @@ package be.bstorm.demospringmvc.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 @Entity
 @Getter
@@ -21,6 +22,7 @@ public class Product {
     private String description;
 
     @Setter
+    @Range(min = 0)
     private double price;
 
     public Product(String designation, String description, double price) {

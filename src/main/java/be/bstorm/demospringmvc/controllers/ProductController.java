@@ -1,13 +1,16 @@
 package be.bstorm.demospringmvc.controllers;
 
 import be.bstorm.demospringmvc.entities.Product;
+import be.bstorm.demospringmvc.models.product.forms.ProductForm;
 import be.bstorm.demospringmvc.services.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,15 +54,22 @@ public class ProductController {
     public String createProduct(
             Model model
     ) {
-        model.addAttribute("product", new Product());
+        model.addAttribute("product", new ProductForm());
         return "pages/product/create.html";
     }
 
     @PostMapping("/create")
     public String createProduct(
-            @ModelAttribute Product product
+            @Valid @ModelAttribute ProductForm product,
+            BindingResult bindingResult,
+            Model model
     ) {
-        productService.save(product);
+
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("product", product);
+            return "pages/product/create.html";
+        }
+        productService.save(product.toProduct());
         return "redirect:/product";
     }
 
@@ -69,18 +79,27 @@ public class ProductController {
             Model model
     ){
         Product product = productService.findById(id);
+        ProductForm form = ProductForm.fromProduct(product);
 
-        model.addAttribute("product", product);
+        model.addAttribute("id", id);
+        model.addAttribute("product", form);
         return "pages/product/update.html";
     }
 
     @PostMapping("/update/{id}")
     public String postUpdateProduct(
             @PathVariable Long id,
-            @ModelAttribute Product product
+            @Valid @ModelAttribute ProductForm product,
+            BindingResult bindingResult,
+            Model model
     ){
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("id", id);
+            model.addAttribute("product", product);
+            return "pages/product/update.html";
+        }
 
-        productService.update(id,product);
+        productService.update(id,product.toProduct());
 
         return "redirect:/product";
     }

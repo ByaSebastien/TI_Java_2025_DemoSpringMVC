@@ -6,7 +6,7 @@
 </head>
 <body>
 <a th:href="@{/product}">Back to list</a>
-<form th:action="@{/product/update/{id} (id=${product.id})} " method="post" th:object="${product}">
+<form th:action="@{/product/update/{id} (id=${id})} " method="post" th:object="${product}">
     <div>
         <label for="designation">Designation : </label>
         <input type="text" required id="designation" th:field="*{designation}">

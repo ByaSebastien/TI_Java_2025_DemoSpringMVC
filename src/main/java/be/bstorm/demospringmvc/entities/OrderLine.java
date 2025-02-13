@@ -21,15 +21,23 @@ public class OrderLine {
     @Column(nullable = false)
     private int quantity;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @MapsId("orderId")
-    @Setter
     private Order order;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @MapsId("productId")
     @Setter
     private Product product;
+
+    public void setOrder(Order order) {
+        this.order = order;
+        if (this.id == null) {
+            this.id = new OrderLineId(order.getId(), this.product.getId());
+        }
+        order.addOrderLine(this);
+    }
+
 
     @Data
     @Embeddable

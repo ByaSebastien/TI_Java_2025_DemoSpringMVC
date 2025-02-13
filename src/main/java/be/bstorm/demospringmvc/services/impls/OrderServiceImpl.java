@@ -36,9 +36,9 @@ public class OrderServiceImpl implements OrderService {
             if(orderLine.getQuantity() > orderLine.getProduct().getStock()){
                 throw new RuntimeException("Limit of quantity exceeded for product " + orderLine.getProduct().getDesignation());
             }
-            orderLine.setId(new OrderLine.OrderLineId(order.getId(),orderLine.getProduct().getId()));
             orderLine.setOrder(order);
         }
         orderLineRepository.saveAll(orderLines);
+        orderRepository.save(order);
     }
 }

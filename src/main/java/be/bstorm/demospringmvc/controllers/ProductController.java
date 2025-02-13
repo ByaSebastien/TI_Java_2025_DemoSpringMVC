@@ -11,9 +11,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/product")
@@ -66,7 +68,12 @@ public class ProductController {
     ) {
 
         if(bindingResult.hasErrors()) {
+            Map<String,String> errors = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.toMap(FieldError::getField, f -> f.getDefaultMessage() == null ? "error" : f.getDefaultMessage()));
+
             model.addAttribute("product", product);
+            model.addAttribute("errors",errors );
+
             return "pages/product/create.html";
         }
         productService.save(product.toProduct());
@@ -94,8 +101,14 @@ public class ProductController {
             Model model
     ){
         if(bindingResult.hasErrors()) {
+
+            Map<String,String> errors = bindingResult.getFieldErrors().stream()
+                            .collect(Collectors.toMap(FieldError::getField, f -> f.getDefaultMessage() == null ? "error" : f.getDefaultMessage()));
+
+            model.addAttribute("errors",errors );
             model.addAttribute("id", id);
             model.addAttribute("product", product);
+
             return "pages/product/update.html";
         }
 

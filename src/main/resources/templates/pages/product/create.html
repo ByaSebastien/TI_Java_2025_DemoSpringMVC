@@ -9,15 +9,21 @@
 <form th:action="@{/product/create}" method="post" th:object="${product}">
     <div>
         <label for="designation">Designation : </label>
-        <input type="text" required id="designation" th:field="*{designation}">
+        <input type="text" id="designation" th:field="*{designation}">
+        <span style="color: red" th:if="${errors != null && errors.containsKey('designation')}"
+              th:text="${errors.get('designation')}"></span>
     </div>
     <div>
         <label for="description">Description : </label>
         <input type="text" id="description" th:field="*{description}">
+        <span style="color: red" th:if="${errors != null && errors.containsKey('description')}"
+              th:text="${errors.get('description')}"></span>
     </div>
     <div>
         <label for="price">Description : </label>
         <input type="number" step="0.01" id="price" th:field="*{price}" pattern="^\d+(\.\d{1,2})?$">
+        <span style="color: red" th:if="${errors != null && errors.containsKey('price')}"
+              th:text="${errors.get('price')}"></span>
     </div>
     <button type="submit">Create</button>
 </form>

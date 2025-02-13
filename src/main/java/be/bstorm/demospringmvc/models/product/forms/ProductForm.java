@@ -1,6 +1,7 @@
 package be.bstorm.demospringmvc.models.product.forms;
 
 import be.bstorm.demospringmvc.entities.Product;
+import be.bstorm.demospringmvc.validators.annotations.CustomSize;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,10 +15,10 @@ import lombok.NoArgsConstructor;
 public class ProductForm {
 
     @NotBlank(message = "Designation should not be empty")
-    @Size(min = 1, max = 50, message = "Designation must be less than 50 char")
+    @CustomSize(min = 2, max = 50)
     private String designation;
 
-    @Size(max = 255)
+    @CustomSize
     private String description;
 
     @Min(0)
@@ -32,7 +33,11 @@ public class ProductForm {
 //    }
 
     public Product toProduct() {
-        return new Product(designation, description, price);
+        return new Product(
+                designation,
+                description.isEmpty() ? null : description,
+                price
+        );
     }
 
     public static ProductForm fromProduct(Product product) {

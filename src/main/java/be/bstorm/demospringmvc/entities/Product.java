@@ -25,9 +25,13 @@ public class Product {
     @Range(min = 0)
     private double price;
 
-    public Product(String designation, String description, double price) {
+    @Setter
+    private int stock;
+
+    public Product(String designation, String description, double price, int stock) {
         this.designation = designation;
         this.description = description;
         this.price = price;
+        this.stock = stock;
     }
 }

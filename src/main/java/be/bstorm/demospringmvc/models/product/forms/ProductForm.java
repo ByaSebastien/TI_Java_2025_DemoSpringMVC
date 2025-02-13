@@ -36,7 +36,8 @@ public class ProductForm {
         return new Product(
                 designation,
                 description.isEmpty() ? null : description,
-                price
+                price,
+                0
         );
     }
 

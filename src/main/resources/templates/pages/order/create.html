@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/order/create}" method="post">
+    <div th:each="orderLine, iterStat: ${order.orderLines}" th:object="${order.orderLines[__${iterStat.index}__]}">
+        <input type="number" th:field="*{productId}">
+        <input type="number" th:field="*{quantity}">
+    </div>
+    <button type="submit">Create</button>
+</form>
+</body>
+</html>

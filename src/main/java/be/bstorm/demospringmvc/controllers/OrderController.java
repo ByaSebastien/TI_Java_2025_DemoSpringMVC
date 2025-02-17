@@ -2,11 +2,13 @@ package be.bstorm.demospringmvc.controllers;
 
 import be.bstorm.demospringmvc.entities.OrderLine;
 import be.bstorm.demospringmvc.entities.Product;
+import be.bstorm.demospringmvc.entities.User;
 import be.bstorm.demospringmvc.models.order.OrderForm;
 import be.bstorm.demospringmvc.models.order.OrderLineForm;
 import be.bstorm.demospringmvc.services.OrderService;
 import be.bstorm.demospringmvc.services.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,8 +44,12 @@ public class OrderController {
 
     @PostMapping("/create")
     public String create(
-            @ModelAttribute OrderForm order
+            @ModelAttribute OrderForm order,
+            Authentication authentication
     ){
+
+        // Récuperer l'utilisateur courant
+        User currentUser = (User) authentication.getPrincipal();
 
         List<OrderLine> orderLines = new ArrayList<>();
         for(OrderLineForm lines : order.getOrderLines()){

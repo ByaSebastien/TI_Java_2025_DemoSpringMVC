@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+</head>
+<body>
+<h1>Login</h1>
+<form th:action="@{/login}" method="post">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+        <input type="submit" value="Login">
+    </div>
+
+    <div th:if="${error}">
+        <p style="color:red" th:text="${error}"></p>
+    </div>
+    <p style="color: green" th:if="${param.logout}">Log out succeed please reconnect</p>
+    <p style="color: green" th:if="${param.registered}">Registration succeed please connect</p>
+</form>
+</body>
+</html>

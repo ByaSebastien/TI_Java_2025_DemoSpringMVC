@@ -1,0 +1,23 @@
+<header xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <nav>
+        <ul>
+            <li>
+                <a th:href="@{/product}">Product</a>
+            </li>
+            <li sec:authorize="isAnonymous()">
+                <a th:href="@{/login}">Login</a>
+            </li>
+            <li sec:authorize="isAnonymous()">
+                <a th:href="@{/register}">Register</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{logout}" method="post">
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <p sec:authentication="name"></p>
+            </li>
+        </ul>
+    </nav>
+</header>

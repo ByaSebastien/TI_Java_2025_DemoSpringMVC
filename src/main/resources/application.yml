@@ -2,7 +2,7 @@ spring:
   application:
     name: DemoSpringMVC
   datasource:
-    url: jdbc:postgresql://localhost:5433/demospringmvc
+    url: jdbc:postgresql://localhost:5432/demospringmvc
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
